@@ -11,14 +11,6 @@ This lab uses a mock inference server to keep costs low. In production you'd use
 - Configuring InferencePool and InferenceGateway
 - Testing multi-cluster routing and failover
 
-## Duration
-
-50–60 minutes
-
-## Cost
-
-~$1.00–$3.00 depending on machine types.
-
 ## Prerequisites
 
 - `gcloud` CLI authenticated
@@ -34,8 +26,6 @@ gcloud services enable \
   multiclusteringress.googleapis.com
 ```
 
----
-
 ## Set variables
 
 ```bash
@@ -46,16 +36,12 @@ export REGION_A=us-central1
 export REGION_B=europe-west1
 ```
 
----
-
 ## Clone the repo
 
 ```bash
 git clone https://github.com/misskecupbung/gke-multi-cluster-inference-gateway.git
 cd gke-multi-cluster-inference-gateway
 ```
-
----
 
 ## Step 1 — Create two clusters
 
@@ -79,8 +65,6 @@ gcloud container clusters create $CLUSTER_B \
   --workload-pool ${PROJECT_ID}.svc.id.goog
 ```
 
----
-
 ## Step 2 — Register in a Fleet
 
 ```bash
@@ -98,8 +82,6 @@ gcloud container fleet memberships list
 gcloud container fleet multi-cluster-services enable
 ```
 
----
-
 ## Step 3 — Set up kubectl contexts
 
 ```bash
@@ -114,8 +96,6 @@ kubectl config rename-context gke_${PROJECT_ID}_${REGION_B}_${CLUSTER_B} cluster
 kubectl --context cluster-a get nodes
 kubectl --context cluster-b get nodes
 ```
-
----
 
 ## Step 4 — Deploy inference backend on both clusters
 
@@ -134,16 +114,12 @@ kubectl --context cluster-a get pods -w
 kubectl --context cluster-b get pods -w
 ```
 
----
-
 ## Step 5 — Create InferencePools
 
 ```bash
 kubectl --context cluster-a apply -f manifests/inference-pool.yaml
 kubectl --context cluster-b apply -f manifests/inference-pool.yaml
 ```
-
----
 
 ## Step 6 — Create the gateway and route
 
@@ -161,8 +137,6 @@ GATEWAY_IP=$(kubectl --context cluster-a get gateway inference-gateway \
 echo $GATEWAY_IP
 ```
 
----
-
 ## Step 7 — Test routing
 
 ```bash
@@ -175,8 +149,6 @@ done
 ```
 
 Traffic goes to both clusters.
-
----
 
 ## Step 8 — Test failover
 
@@ -199,8 +171,6 @@ All traffic goes to cluster-b. Restore cluster-a:
 kubectl --context cluster-a scale deployment inference-backend --replicas=2
 ```
 
----
-
 ## Step 9 — Clean up
 
 ```bash
@@ -213,8 +183,6 @@ gcloud container fleet memberships delete $CLUSTER_B --quiet
 gcloud container clusters delete $CLUSTER_A --region $REGION_A --quiet
 gcloud container clusters delete $CLUSTER_B --region $REGION_B --quiet
 ```
-
----
 
 ## Limitations
 
