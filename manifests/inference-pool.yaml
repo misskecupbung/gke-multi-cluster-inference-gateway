@@ -1,0 +1,28 @@
+# InferencePool groups your inference backend pods.
+# The gateway uses this to make routing decisions:
+# - Which pods are healthy
+# - What model they serve
+# - KV cache affinity (for real LLM backends)
+#
+# API reference:
+# https://cloud.google.com/kubernetes-engine/docs/concepts/inference-gateway
+#
+# Note: This CRD is installed when you enable the Inference Gateway feature on GKE.
+# If kubectl apply fails with "no matches for kind", check that the feature is enabled.
+
+apiVersion: inference.gke.io/v1alpha1
+kind: InferencePool
+metadata:
+  name: mock-model-pool
+spec:
+  # The model this pool serves.
+  # Requests with "model": "mock-model" will be routed here.
+  modelName: mock-model
+
+  # Which pods are in this pool
+  selector:
+    matchLabels:
+      app: inference-backend
+
+  # Port on the pod that handles inference requests
+  targetPortNumber: 8080

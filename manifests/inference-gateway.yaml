@@ -1,0 +1,22 @@
+# Multi-cluster InferenceGateway
+# This creates a global load balancer that routes inference traffic
+# across InferencePools in multiple clusters registered in the same Fleet.
+#
+# Apply this to the config cluster (Cluster A in this lab).
+
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: inference-gateway
+  annotations:
+    # Use the GKE inference gateway class which supports multi-cluster routing
+    networking.gke.io/gateway-type: inference-multicluster
+spec:
+  gatewayClassName: gke-l7-global-external-managed-multicluster
+  listeners:
+  - name: http
+    protocol: HTTP
+    port: 80
+    allowedRoutes:
+      namespaces:
+        from: Same
