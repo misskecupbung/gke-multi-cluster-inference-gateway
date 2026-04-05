@@ -64,6 +64,8 @@ gcloud container clusters create $CLUSTER_A \
   --region $REGION_A \
   --num-nodes 1 \
   --machine-type e2-standard-4 \
+  --disk-size=50 \
+  --disk-type=pd-standard \
   --release-channel rapid \
   --workload-pool ${PROJECT_ID}.svc.id.goog
 
@@ -71,6 +73,8 @@ gcloud container clusters create $CLUSTER_B \
   --region $REGION_B \
   --num-nodes 1 \
   --machine-type e2-standard-4 \
+  --disk-size=50 \
+  --disk-type=pd-standard \
   --release-channel rapid \
   --workload-pool ${PROJECT_ID}.svc.id.goog
 ```
